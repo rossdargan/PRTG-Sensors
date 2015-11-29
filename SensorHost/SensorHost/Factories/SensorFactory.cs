@@ -10,6 +10,8 @@ namespace SensorHost.Factories
 
     using SensorHost.Shared;
 
+    using UpsSensor;
+
     public class SensorFactory: ISensorFactory
     {
         private static readonly Lazy<IEnumerable<ISensor>> Sensors = new Lazy<IEnumerable<ISensor>>(InitSensors);
@@ -18,6 +20,7 @@ namespace SensorHost.Factories
         {
             Console.WriteLine("Loading Sensors");
             List<ISensor> sensors = new List<ISensor>();
+            sensors.Add(new UPSSensor());
             string exeLocation = Assembly.GetEntryAssembly().Location;
             string directory = Path.GetDirectoryName(exeLocation);
             string sensorsLocation = $"{directory}\\Sensors";

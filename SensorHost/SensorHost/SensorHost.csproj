@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -110,6 +110,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Sensors\UpsSensor\UpsSensor\UpsSensor.csproj">
+      <Project>{e202a3a4-f670-493e-8022-7071c77aa513}</Project>
+      <Name>UpsSensor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SensorHost.Shared\SensorHost.Shared.csproj">
       <Project>{d07fdf8e-dd80-411c-b335-e9a4715dae29}</Project>
       <Name>SensorHost.Shared</Name>
