@@ -38,8 +38,18 @@
         /// <returns></returns>
         private Response QuerySensor(ISensor sensor)
         {
-            var reply = new Reply(sensor.Description, sensor.Results().ToList());
-            return Response.AsText(_serializer.Serialize(reply), _serializer.ContentType);
+            try
+            {
+                var reply = new Reply(sensor.Description, sensor.Results().ToList());
+                return Response.AsText(_serializer.Serialize(reply), _serializer.ContentType);
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("ERROR WITH REQUEST!");
+                Console.WriteLine(err.ToString());
+                return 500;
+            }
+          
         }
     }
 }

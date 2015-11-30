@@ -8,9 +8,10 @@ namespace SensorHost.Factories
     using System.Collections.Generic;
     using System.Linq;
 
+    using Microsoft.Practices.ObjectBuilder2;
+
     using SensorHost.Shared;
 
-    using UpsSensor;
 
     public class SensorFactory: ISensorFactory
     {
@@ -20,17 +21,20 @@ namespace SensorHost.Factories
         {
             Console.WriteLine("Loading Sensors");
             List<ISensor> sensors = new List<ISensor>();
-            sensors.Add(new UPSSensor());
             string exeLocation = Assembly.GetEntryAssembly().Location;
             string directory = Path.GetDirectoryName(exeLocation);
             string sensorsLocation = $"{directory}\\Sensors";
             var files = Directory.EnumerateFiles(sensorsLocation, "*.dll");
-
-            foreach (var file in files)
+            var assemblies = LoadAssemblies(files);
+            foreach (var assembly in assemblies)
             {
-                var assembly = Assembly.LoadFile(file);
                 foreach (Type type in assembly.GetExportedTypes())
                 {
+                    if (type.IsAbstract)
+                    {
+                        continue;
+                    }
+
                     bool isSensor = type.GetInterfaces().Any(inter => typeof(ISensor).IsAssignableFrom(inter));
                     if (isSensor)
                     {
@@ -46,6 +50,27 @@ namespace SensorHost.Factories
             }
             return sensors;
         }
+
+        private static List<Assembly> LoadAssemblies(IEnumerable<string> files)
+        {
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(p=>p.IsDynamic==false).ToList();                       
+            foreach (var file in files)
+            {
+                try
+                {
+                    var assemblyName = AssemblyName.GetAssemblyName(file);
+                    loadedAssemblies.Add(AppDomain.CurrentDomain.Load(assemblyName));
+                }
+                catch (BadImageFormatException error)
+                {
+                             
+                }
+                
+            }
+            return loadedAssemblies;
+        }
+
+       
 
         public IEnumerable<ISensor> GetSensors()
         {
