@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SensorHost.Shared</name>
+    </assembly>
+    <members>
+        <member name="P:SensorHost.Shared.ISensor.Description">
+            <summary>
+            Gets the description of the sensor
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.ISensor.Name">
+            <summary>
+            This is used by the host to decide on the URL to listen on. For example if the name is "testsensor" then
+            the service will listen on "http://localhost:1234/testsensor"
+            </summary>
+        </member>
+        <member name="M:SensorHost.Shared.ISensor.Results">
+            <summary>
+            When queried you return the list of results (channels) using this method.
+            </summary>
+            <returns>
+            The <see cref="!:IEnumerable"/>.
+            </returns>
+        </member>
+        <member name="T:SensorHost.Shared.Result">
+            <summary>
+            This represents the result of a single channel.
+            </summary>
+        </member>
+        <member name="M:SensorHost.Shared.Result.#ctor(System.String,System.Double)">
+            <summary>
+            Ini
+            </summary>
+            <param name="channel"></param>
+            <param name="value"></param>
+        </member>
+        <member name="P:SensorHost.Shared.Result.Channel">
+            <summary>
+            Name of the channel as displayed in user interfaces. This parameter is required and must be unique for the sensor.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.Unit">
+            <summary>
+            The unit of the value. Default is Custom. Useful for PRTG to be able to convert volumes and times.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.CustomUnit">
+            <summary>
+            If Custom is used as unit this is the text displayed behind the value.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.SpeedSize">
+            <summary>
+            Size used for the display value. E.g. if you have a value of 50000 and use Kilo as size the display is 50 kilo #. Default is One (value used as returned). For the Bytes and Speed units this is overridden by the setting in the user interface.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.VolumeSize">
+            <summary>
+            Size used for the display value. E.g. if you have a value of 50000 and use Kilo as size the display is 50 kilo #. Default is One (value used as returned). For the Bytes and Speed units this is overridden by the setting in the user interface.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.SpeedTime">
+            <summary>
+            See above, used when displaying the speed. Default is Second.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.Mode">
+            <summary>
+            Selects if the value is a absolute value or counter. Default is Absolute.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.Value">
+            <summary>
+            The value as integer or float. Please make sure the setting matches the kind of value provided. Otherwise PRTG will show 0 values.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.ShowChart">
+            <summary>
+            Init value for the Show in Chart option. Default is true
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.ShowTable">
+            <summary>
+            Init value for the Show in Table option. Default is true
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.LimitMaxError">
+            <summary>
+            Maximum value before the error message is shown.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.LimitErrorMsg">
+            <summary>
+            The error mesage to show if the limit is reached.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.LimitMode">
+            <summary>
+            Should the error, and wanring limites be used? Default is false.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.LimitMaxWarning">
+            <summary>
+            The maximum value before the warning message is shown
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.LimitWarningMsg">
+            <summary>
+            The warning message to display.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.Warning">
+            <summary>
+            if enabled in at least one channel, the entire sensor is set to warning status. Default isfalse.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.Float">
+            <summary>
+            Define if the value is a float. Default is false. If set to true, use a dot as decimal seperator in values. Note: In the sensor's Channels tab, you can define the number of decimal places shown in tables.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.Result.ValueLookup">
+            <summary>       
+            Specifies the value lookup type
+            </summary>
+        </member>
+        <member name="T:SensorHost.Shared.SensorBase">
+            <summary>
+            A base class to help make a sensor easier.
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.SensorBase.Description">
+            <summary>
+            Gets the description of the sensor
+            </summary>
+        </member>
+        <member name="P:SensorHost.Shared.SensorBase.Name">
+            <summary>
+            This is used by the host to decide on the URL to listen on. For example if the name is "testsensor" then
+            the service will listen on "http://localhost:1234/testsensor"       
+            This defaults to the objects type name.
+            </summary>
+        </member>
+        <member name="M:SensorHost.Shared.SensorBase.Results">
+            <summary>
+            Used to return the results to the sensor host.
+            </summary>
+            <returns>
+            The <see cref="!:IEnumerable"/>.
+            </returns>
+        </member>
+        <member name="F:SensorHost.Shared.UnitTypes.Custom">
+            <summary>
+            Specify the unit required in "CustomUnit"
+            </summary>
+        </member>
+    </members>
+</doc>
