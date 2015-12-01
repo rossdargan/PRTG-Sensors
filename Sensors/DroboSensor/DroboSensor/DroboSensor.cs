@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DroboSensor
 {
@@ -40,13 +38,13 @@ namespace DroboSensor
             else
             {
 
-                if (_drobos.ContainsKey(drobo.NameOfDrobo))
+                if (_drobos.ContainsKey(drobo.SerialNumber))
                 {
-                    _drobos[drobo.NameOfDrobo] = drobo;
+                    _drobos[drobo.SerialNumber] = drobo;
                 }
                 else
                 {
-                    _drobos.Add(drobo.NameOfDrobo, drobo);
+                    _drobos.Add(drobo.SerialNumber, drobo);
                 }
             }
         }
@@ -99,40 +97,131 @@ namespace DroboSensor
 
         private IEnumerable<Result> ConvertToResult(IDrobo drobo)
         {
-            List<Result> results = new List<Result>();      
+            List<Result> results = new List<Result>();
+
+
+            double usedPercent =100- Math.Round((drobo.FreeCapacityProtected / drobo.TotalCapacityProtected) * 100,2);
+
+            results.Add(new Result("Used protected space", usedPercent)
+            {
+                Unit = UnitTypes.Percent,
+                Mode = SensorModes.Absolute,
+                LimitMaxWarning = 75,
+                LimitWarningMsg = "You have less than 25% protected space available",
+                LimitMaxError = 90,
+                LimitErrorMsg = "You are nearly out of protected space",
+                LimitMode = true,
+                Float = true
+            });
+
+
 
             foreach (var drive in drobo.Drives)
             {
-                results.Add(ResultForDrive(drive));
+                results.AddRange(ResultForDrive(drive));
             }
 
+            Result freeProtectedSpace = new Result("Free protected space", drobo.FreeCapacityProtected)
+            {
+                Unit =
+                                               UnitTypes.BytesDisk,
+                VolumeSize =
+                                               SensorSpeedSize
+                                               .MegaByte,
+            };
+         
+            results.Add(freeProtectedSpace);
 
-            results.Add(new Result("Free capacity protected", drobo.FreeCapacityProtected)
-                            {
-                                Unit = UnitTypes.BytesDisk,
-                                Mode = SensorModes.Absolute,
-                VolumeSize = SensorSpeedSize.GigaByte,
-                Data= DataType.Percent,
-                Maximum = drobo.TotalCapacityProtected
-            });
-            results.Add(new Result("Total Capacity", drobo.UsedCapacityProtected)
-                            {
-                                Unit = UnitTypes.BytesDisk,
-                                VolumeSize = SensorSpeedSize.GigaByte,
-                                
-                                
-                            });            
+            Result totalCapacity = new Result("Total Capacity", drobo.TotalCapacityProtected)
+                                       {
+                                           Unit =
+                                               UnitTypes.BytesDisk,
+                                           VolumeSize =
+                                               SensorSpeedSize
+                                               .MegaByte,                                        
+                                       };
+        
+            results.Add(totalCapacity);            
             return results;
         }
 
-        private static Result ResultForDrive(DroboDrive drive)
+        private static Result[] ResultForDrive(DroboDrive drive)
         {
-            Result result = new Result($"Drive {drive.SlotNumber} ({drive.PhysicalCapcity})", drive.Status)
-                                {   
-                                       ValueLookup        = "developingtrends.drobosensor.drivestatus"
-            };
+            Result result1 = new Result($"Drive {drive.SlotNumber + 1} Status", drive.Status)
+                                 {
+                                     ValueLookup =
+                                         "developingtrends.drobosensor.drivestatus"
+                                 };
 
-            return result;
+
+            Result result2 = new Result($"Drive {drive.SlotNumber + 1} Capacity", drive.PhysicalCapcity)
+                                 {
+                                  
+                                     VolumeSize =
+                                         SensorSpeedSize
+                                         .GigaByte,
+                                     Unit =
+                                         UnitTypes.BytesDisk                                         ,
+                                     ShowTable =
+                                         false
+                                 };
+            // BytesToResult(result2);
+
+            return new[] { result1, result2 };
+        }
+
+
+        public static void BytesToResult( Result result)
+        {
+            double val = result.Value;
+            string[] array = new string[]
+            {
+        "B",
+        "KB",
+        "MB",
+        "GB"
+            };
+            int num = 0;
+            while (val >= 1000.0 && num + 1 < array.Length)
+            {
+                num++;
+                val /= 1000.0;
+            }
+            result.Value = Math.Round(val,2);
+            switch (num)
+            {
+                case 0:
+                    result.VolumeSize = SensorSpeedSize.Byte;
+                    break;
+                case 1:
+                    result.VolumeSize = SensorSpeedSize.KiloByte;
+                    break;
+                case 2:
+                    result.VolumeSize = SensorSpeedSize.MegaByte;
+                    break;
+                case 3:
+                    result.VolumeSize = SensorSpeedSize.GigaByte;
+                    break;
+            }
+        }
+        public static string BytesToHDSizeString(double val)
+        {
+            string[] array = new string[]
+            {
+        "B",
+        "KB",
+        "MB",
+        "GB",
+        "TB",
+        "PB"
+            };
+            int num = 0;
+            while (val >= 1000.0 && num + 1 < array.Length)
+            {
+                num++;
+                val /= 1000.0;
+            }
+            return string.Format("{0:0} {1}", val, array[num]);
         }
     }
 }
