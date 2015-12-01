@@ -112,6 +112,7 @@
             }
 
             json.AddJsonValue("value", result.Value);
+            json.AddXmlValue("valueLookup", result.ValueLookup);
 
             json.Append("}");
             return json.ToString();

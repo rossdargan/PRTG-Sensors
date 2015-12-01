@@ -104,5 +104,9 @@
         /// </summary>
         public bool? Float { get; set; }
 
+        /// <summary>
+        /// Defines the custom lookup to use to change the value to text.
+        /// </summary>
+        public string ValueLookup { get; set; }
     }
 }

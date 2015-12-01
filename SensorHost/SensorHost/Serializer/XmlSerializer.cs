@@ -114,9 +114,13 @@
             if (result.Float.HasValue)
             {
                 xml.AddXmlValue("float", result.Float.Value);
-            }
+            }          
 
             xml.AddXmlValue("value", result.Value);
+            if (!string.IsNullOrWhiteSpace(result.ValueLookup))
+            {
+                xml.AddXmlValue("valueLookup", result.ValueLookup);
+            }
 
             xml.Append("</result>");
             return xml.ToString();
