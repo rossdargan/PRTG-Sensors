@@ -63,7 +63,12 @@ namespace SensorHost.Factories
                 }
                 catch (BadImageFormatException error)
                 {
-                             
+
+                }
+                catch (IOException ioex)
+                {
+                    Console.WriteLine(ioex);
+                    Console.WriteLine("Error accessing file {0}", file);
                 }
                 
             }
