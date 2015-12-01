@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DroboSensor
+﻿namespace DevelopingTrends
 {
-    using DevelopingTrends.DroboInterface;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using DroboInterface;
 
     using SensorHost.Shared;
+
     public class DroboSensor : SensorHost.Shared.SensorBase
     {
         public bool _connected = false;
@@ -14,17 +15,17 @@ namespace DroboSensor
         private readonly DroboConnection _connection;
         public DroboSensor()
         {
-            _connection = new DroboConnection(30000);
-            _connected =_connection.Connect();
-            _connection.ConnectionLost += ConnectionOnConnectionLost;
-            _connection.DataRecieved += Connection_DataRecieved;
-            Console.WriteLine($"Drobo is connected: {_connected}");
+            this._connection = new DroboConnection(30000);
+            this._connected =this._connection.Connect();
+            this._connection.ConnectionLost += this.ConnectionOnConnectionLost;
+            this._connection.DataRecieved += this.Connection_DataRecieved;
+            Console.WriteLine($"Drobo is connected: {this._connected}");
         }
 
         private void ConnectionOnConnectionLost()
         {
-            _connected = false;
-            _drobos.Clear();
+            this._connected = false;
+            this._drobos.Clear();
             Console.WriteLine("Connection Lost");
         }
 
@@ -38,39 +39,39 @@ namespace DroboSensor
             else
             {
 
-                if (_drobos.ContainsKey(drobo.SerialNumber))
+                if (this._drobos.ContainsKey(drobo.SerialNumber))
                 {
-                    _drobos[drobo.SerialNumber] = drobo;
+                    this._drobos[drobo.SerialNumber] = drobo;
                 }
                 else
                 {
-                    _drobos.Add(drobo.SerialNumber, drobo);
+                    this._drobos.Add(drobo.SerialNumber, drobo);
                 }
             }
         }
 
         public override IEnumerable<Result> Results()
         {
-            if (!_connected)
+            if (!this._connected)
             {
-                _connected = _connection.Connect();
+                this._connected = this._connection.Connect();
             }
 
-            if (!_drobos.Any())
+            if (!this._drobos.Any())
             {
                 return Enumerable.Empty<Result>();
             }
             //only going to return the first drobo found for this version.
-            return ConvertToResult(_drobos.First().Value);
+            return this.ConvertToResult(this._drobos.First().Value);
         }
 
         public override string Description
         {
             get
             {
-                if (_drobos.Any())
+                if (this._drobos.Any())
                 {
-                    IDrobo firstDrobo = _drobos.First().Value;
+                    IDrobo firstDrobo = this._drobos.First().Value;
                     switch (firstDrobo.Status)
                     {
                         case ConnectionStatus.TimeOut:

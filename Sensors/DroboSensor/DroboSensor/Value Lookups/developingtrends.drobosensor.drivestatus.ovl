@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+  <ValueLookup id="developingtrends.drobosensor.drivestatus" desiredValue="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="PaeValueLookup.xsd">
+    <Lookups>
+      <SingleInt state="Error" value="1">
+        Add/upgrade drive immediately
+      </SingleInt>
+      <SingleInt state="Warning" value="2">
+        Add/upgrade drive soon
+      </SingleInt>
+      <SingleInt state="OK" value="3">
+        All OK
+      </SingleInt>
+      <SingleInt state="OK" value="4">
+        Relayout of data
+      </SingleInt>
+      <SingleInt state="OK" value="123">
+        Empty Slot
+      </SingleInt>
+      <SingleInt state="OK" value="129">
+        Insert New Drive Here
+      </SingleInt>
+      <SingleInt state="Error" value="134">
+        Defective drive, replace immediately
+      </SingleInt>     
+    </Lookups>
+  </ValueLookup>
