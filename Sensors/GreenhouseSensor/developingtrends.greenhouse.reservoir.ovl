@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+  <ValueLookup id="developingtrends.greenhouse.reservoir" desiredValue="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="PaeValueLookup.xsd">
+    <Lookups>
+      <SingleInt state="Error" value="0">
+	Reservoir running low
+      </SingleInt>
+      <SingleInt state="OK" value="1">
+        Reservoir Level OK
+      </SingleInt>     
+    </Lookups>
+  </ValueLookup>
