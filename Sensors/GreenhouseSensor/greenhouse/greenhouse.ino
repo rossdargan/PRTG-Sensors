@@ -1,4 +1,4 @@
-#include <DHT22.h>
+#include <DHT.h>
 
 /*
   Web Server
@@ -36,7 +36,7 @@ int outputValue = 0;        // value output to the PWM (analog out)
 
 int switchValue = LOW;
 // Setup a DHT22 instance
-DHT22 myDHT22(DHT22_PIN);
+DHT  myDHT22(DHT22_PIN, DHT22);
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -71,7 +71,6 @@ void loop() {
   // listen for incoming clients
   EthernetClient client = server.available();
   if (client) {
-     DHT22_ERROR_t errorCode;
      
     Serial.println("new client");
     // an http request ends with a blank line
@@ -113,14 +112,11 @@ void loop() {
                client.print("<result><channel>Reservoir</channel><valueLookup>developingtrends.greenhouse.reservoir</valueLookup><value>");
             client.print(switchValue);
             client.println("</value></result>");
-            errorCode = myDHT22.readData();
-            switch(errorCode)
-            {
-              case DHT_ERROR_NONE:
+            
                 client.print("<result><channel>Temperature</channel><unit>Custom</unit><customUnit>°C</customUnit><float>1</float><value>");
-                client.print(myDHT22.getTemperatureC());
+                client.print(myDHT22.readTemperature());
                 client.print("</value></result><result><channel>Humidity</channel><unit>Percent</unit><float>1</float><value>");
-                client.print(myDHT22.getHumidity());
+                client.print(myDHT22.readHumidity());
                 client.println("</value></result>");
                 // Alternately, with integer formatting which is clumsier but more compact to store and
              // can be compared reliably for equality:
@@ -130,33 +126,7 @@ void loop() {
            //                  myDHT22.getTemperatureCInt()/10, abs(myDHT22.getTemperatureCInt()%10),
            //                  myDHT22.getHumidityInt()/10, myDHT22.getHumidityInt()%10);
             //    client.println(buf);
-                break;
-              case DHT_ERROR_CHECKSUM:
-                client.print("<error>check sum error </error>");
-                //client.print(myDHT22.getTemperatureC());
-                //client.print("C ");
-                //client.print(myDHT22.getHumidity());
-                //client.println("%");
-                break;
-              case DHT_BUS_HUNG:
-                client.println("<error>BUS Hung </error>");
-                break;
-              case DHT_ERROR_NOT_PRESENT:
-                client.println("<error>Not Present </error>");
-                break;
-              case DHT_ERROR_ACK_TOO_LONG:
-                client.println("<error>ACK time out </error>");
-                break;
-              case DHT_ERROR_SYNC_TIMEOUT:
-                client.println("<error>Sync Timeout </error>");
-                break;
-              case DHT_ERROR_DATA_TIMEOUT:
-                client.println("<error>Data Timeout </error>");
-                break;
-              case DHT_ERROR_TOOQUICK:
-                client.println("<error>Polled to quick </error>");
-                break;
-            }
+            
 
   
 
